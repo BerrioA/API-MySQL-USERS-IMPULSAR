@@ -27,6 +27,8 @@ app.use(session({
   saveUninitialized: true,
 }));
 
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
@@ -42,15 +44,15 @@ app.get('/', (req, res) => {
 app.post('/login', (req, res) => {
   const { correo, contrasena } = req.body;
   req.getConnection((err, conn) => {
-    if (err) return res.send(err);
+    if (err) return res.status(500).json({ success: false, message: 'Error de conexión a la base de datos' });
 
     conn.query('SELECT * FROM usuarios WHERE correo = ? AND contrasena = ?', [correo, contrasena], (err, rows) => {
-      if (err) return res.send(err);
+      if (err) return res.status(500).json({ success: false, message: 'Error en la consulta a la base de datos' });
       if (rows.length > 0) {
         req.session.user = rows[0];
-        res.redirect('/dashboard');
+        res.json({ success: true });
       } else {
-        res.send('Correo o contraseña incorrectos');
+        res.json({ success: false, message: 'Correo o contraseña incorrectos' });
       }
     });
   });
@@ -66,11 +68,7 @@ app.get('/dashboard', (req, res) => {
 
 app.use('/api/usuarios', routes);
 
-// Static files
-app.use('/public', express.static(path.join(__dirname, 'public')));
-
 // Server running
 app.listen(app.get('port'), () => {
   console.log('Servidor corriendo en el puerto', app.get('port'));
 });
-
