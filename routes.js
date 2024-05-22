@@ -50,4 +50,20 @@ routes.put('/:idusuario', (req, res) => {
 });
 
 
+// Mostrar los usuarios por id
+routes.get('/:idusuario', (req, res) => {
+    req.getConnection((err, conn) => {
+        if (err) return res.status(500).send(err);
+
+        const idUsuario = req.params.idusuario;
+
+        conn.query('SELECT * FROM usuarios WHERE idusuario = ?', [idUsuario], (err, rows) => {
+            if (err) return res.status(500).send(err);
+
+            res.json(rows); // Enviar la respuesta como JSON
+        });
+    });
+});
+
+
 module.exports = routes
