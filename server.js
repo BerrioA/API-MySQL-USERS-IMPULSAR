@@ -10,11 +10,11 @@ const routes = require('./routes');
 const app = express();
 app.set('port', process.env.PORT || 9000);
 const dbOptions = {
-  host: 'b87j0ttgbimt1yoh1uzm-mysql.services.clever-cloud.com',
+  host: 'bh6qoxspyjypzkmv8z3g-mysql.services.clever-cloud.com',
   port: 3306,
-  user: 'uqumyc5ht2wkpfe3',
-  password: 'TWeDJNZfuD6j75Zpbu3j',
-  database: 'b87j0ttgbimt1yoh1uzm',
+  user: 'uwahfs50c2s2q9qf',
+  password: 'BoelubZ0yxNAW1SJFS5f',
+  database: 'bh6qoxspyjypzkmv8z3g',
 };
 
 // Middlewares
