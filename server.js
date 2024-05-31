@@ -4,11 +4,13 @@ const myconn = require('express-myconnection');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const path = require('path');
+const cors = require('cors');
 
 const routes = require('./routes');
 
 const app = express();
 app.set('port', process.env.PORT || 9000);
+
 const dbOptions = {
   host: 'bh6qoxspyjypzkmv8z3g-mysql.services.clever-cloud.com',
   port: 3306,
@@ -17,7 +19,16 @@ const dbOptions = {
   database: 'bh6qoxspyjypzkmv8z3g',
 };
 
+// Configuración de CORS
+const corsOptions = {
+  origin: ['http://localhost:3000', 'https://impulsarth.netlify.app'],
+  optionsSuccessStatus: 200,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
 // Middlewares
+app.use(cors(corsOptions));
 app.use(myconn(mysql, dbOptions, 'single'));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -28,13 +39,6 @@ app.use(session({
 }));
 
 app.use(express.static(path.join(__dirname, 'public')));
-
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  next();
-});
 
 // Routes
 app.get('/', (req, res) => {
